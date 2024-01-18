@@ -169,10 +169,17 @@ class SparkAdapter(SQLAdapter):
             table_results = AttrDict()
 
         information = ""
+        prefix = " |-- "
+        suffix = " (nullable = true)"
         for info_row in table_results:
             info_type, info_value, _ = info_row
+            if info_type == "":
+                continue
+            if info_type == "# Metadata Columns":
+                prefix=""
+                suffix=""
             if not info_type.startswith("#"):
-                information += f"{info_type}: {info_value}\n"
+                information += f"{prefix}{info_type}: {info_value}{suffix}\n"
 
         return _schema, name, information
 
